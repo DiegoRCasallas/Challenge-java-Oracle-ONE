@@ -1,6 +1,5 @@
 package main.controller;
 
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -11,28 +10,57 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+import main.model.ConversorCurrency;
 import main.model.Moneda;
 
-public class temperatureController implements Initializable {
-    /* */
-    @FXML
-    private TextArea txtInputCurrency, txtOutputCurrency;
-    @FXML
-    private Button btnConvertCurrency;
-    @FXML
-    private ComboBox<Moneda> cbCurrency2, cbCurrency1;
+public class MainController implements Initializable {
 
+    /*vars */
     private Moneda monedaDestino;
-
+  
+    /*Variables desde la vista principal*/
+    @FXML
+    private TextArea txtInputCurrency, txtOutputCurrency,txtInputTemperature, txtOutputTemperature;
+    @FXML
+    private Button btnConvertCurrency,btnConvertTemperatureButton;
+    @FXML
+    private ComboBox<Moneda> cbCurrency1, cbCurrency2, cbTemperature1, cbTemperature2;
+    
+    /*Escucha de eventos en Combobox */
     @FXML
     private void cbEvent(ActionEvent e) {
         Object evento = e.getSource();
         if (evento.equals(cbCurrency2)) {
-           setmonedaDestino(cbCurrency2.getSelectionModel().getSelectedItem());
-           System.out.println(this.monedaDestino.getTag());
-           txtOutputCurrency.setText(this.monedaDestino.getTag());
+            setmonedaDestino(cbCurrency2.getSelectionModel().getSelectedItem());
+            System.out.println(this.monedaDestino.getTag());
+            txtOutputCurrency.setText(this.monedaDestino.getTag());
         }
 
+    }
+    @FXML
+    private void cbEventCurrOrigen(){
+
+    }
+    @FXML
+    private void cbEventCurrDestino(){
+
+    }
+    @FXML
+    private void cbEventTempOrigen(){
+
+    }
+    @FXML
+    private void cbEventTempDestino(){
+
+    }
+    
+    @FXML
+    private void btnEventCurrency(){
+        System.out.println("convertir moneda");
+    }
+    @FXML
+    private void btnEventTemperature(){
+        System.out.println("convertir a Temperatura");
     }
 
     // GET Y SET
@@ -86,5 +114,6 @@ public class temperatureController implements Initializable {
         monedas.add(new Moneda("Won Surcoreano", "KRW", 1305.65));
         return monedas;
     }
+
 
 }

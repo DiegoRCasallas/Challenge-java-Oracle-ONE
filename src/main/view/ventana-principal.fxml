@@ -11,7 +11,7 @@
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
     prefHeight="480.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE"
     xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1"
-    fx:controller="main.controller.temperatureController">
+    fx:controller="main.controller.MainController" >
     <tabs>
         <Tab text="Currency converter">
             <content>
@@ -32,13 +32,13 @@
                         <!-- Combobox-->
                         <ComboBox fx:id="cbCurrency1" layoutX="38.0" layoutY="113.0"
                             prefHeight="11.0" prefWidth="524.0" promptText="Seleccione moneda "
-                            visibleRowCount="5" />
+                            visibleRowCount="5" onAction="#cbEventCurrOrigen" />
                         <ComboBox fx:id="cbCurrency2" layoutX="38.0" layoutY="191.0"
                             prefHeight="11.0" prefWidth="524.0" promptText="Seleccione moneda "
-                            visibleRowCount="5" />
+                            visibleRowCount="5" onAction="#cbEventCurrDestino" />
                         <!-- Buttons-->
                         <Button fx:id="btnConvertCurrency" layoutX="260.0" layoutY="380.0"
-                        mnemonicParsing="false" text="Convertir" />
+                            mnemonicParsing="false" text="Convertir" onAction="#btnEventCurrency" />
                     </children>
                 </AnchorPane>
             </content>
@@ -55,9 +55,9 @@
                         <Label layoutX="43.0" layoutY="247.0" text="Ingrese valor a convertir" />
                         <!-- Combobox-->
                         <ComboBox fx:id="cbTemperature1" layoutX="37.0" layoutY="107.0"
-                            prefHeight="8.0" prefWidth="526.0" promptText="Seleccione grados " />
+                            prefHeight="8.0" prefWidth="526.0" promptText="Seleccione grados " onAction="#cbEventTempOrigen" />
                         <ComboBox fx:id="cbTemperature2" layoutX="37.0" layoutY="193.0"
-                            prefHeight="8.0" prefWidth="526.0" promptText="Seleccione grados " />
+                            prefHeight="8.0" prefWidth="526.0" promptText="Seleccione grados " onAction="#cbEventTempDestino" />
                         <!-- TextArea-->
                         <TextArea fx:id="txtInputTemperature" layoutX="43.0" layoutY="276.0"
                             prefHeight="88.0" prefWidth="245.0" />
@@ -65,7 +65,7 @@
                             prefHeight="87.0" prefWidth="242.0" />
                         <!-- Botones-->
                         <Button fx:id="btnConvertTempertature" layoutX="248.0" layoutY="384.0"
-                            mnemonicParsing="false" text="Convertir" />
+                            mnemonicParsing="false" text="Convertir" onAction="#btnEventTemperature" />
                     </children>
                 </AnchorPane>
             </content>
