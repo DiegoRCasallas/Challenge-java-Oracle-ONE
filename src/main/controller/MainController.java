@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import javax.swing.Action;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,7 +18,10 @@ import main.model.Moneda;
 public class MainController implements Initializable {
 
     /*vars */
+    private Moneda monedaOrigen;
     private Moneda monedaDestino;
+    private Double inputValue;
+    private Double outputValue;
   
     /*Variables desde la vista principal*/
     @FXML
@@ -31,18 +36,29 @@ public class MainController implements Initializable {
     private void cbEvent(ActionEvent e) {
         Object evento = e.getSource();
         if (evento.equals(cbCurrency2)) {
-            setmonedaDestino(cbCurrency2.getSelectionModel().getSelectedItem());
+            setMonedaDestino(cbCurrency2.getSelectionModel().getSelectedItem());
             System.out.println(this.monedaDestino.getTag());
             txtOutputCurrency.setText(this.monedaDestino.getTag());
         }
 
     }
     @FXML
-    private void cbEventCurrOrigen(){
-
+    private void cbEventCurrOrigen(ActionEvent e){
+        Object evento= e.getSource();
+        if(evento.equals(cbCurrency1)){
+            //Seleccionamos Moneda y asidnamos a moneda origen
+            setMonedaOrigen(cbCurrency1.getSelectionModel().getSelectedItem());
+            System.out.println(this.monedaOrigen.getTag());
+        }
     }
     @FXML
-    private void cbEventCurrDestino(){
+    private void cbEventCurrDestino(ActionEvent e){
+        Object evento= e.getSource();
+        if(evento.equals(cbCurrency2)){
+            //Seleccionamos Moneda y asidnamos a moneda origen
+            setMonedaOrigen(cbCurrency2.getSelectionModel().getSelectedItem());
+            System.out.println(this.monedaOrigen.getTag());
+        }
 
     }
     @FXML
@@ -57,6 +73,14 @@ public class MainController implements Initializable {
     @FXML
     private void btnEventCurrency(){
         System.out.println("convertir moneda");
+        /*1.Caputurar el valor del input */
+        setInputValue(Double.parseDouble(txtInputCurrency.getText()));
+        /*1.5 Validar mondeda origen y monedaDestino */
+        
+        /*2. Convertir valor a dolares */
+
+        /*3.Convertir valor a moneda destino */
+        System.out.println(this.inputValue);
     }
     @FXML
     private void btnEventTemperature(){
@@ -64,15 +88,34 @@ public class MainController implements Initializable {
     }
 
     // GET Y SET
-    public Moneda getmonedaDestino() {
+    public Moneda getMonedaOrigen() {
+        return monedaOrigen;
+    }
+    public void setMonedaOrigen(Moneda monedaOrigen) {
+        this.monedaOrigen = monedaOrigen;
+    }
+    public Moneda getMonedaDestino() {
         return monedaDestino;
     }
-
-    public void setmonedaDestino(Moneda monedaDestino) {
+    public void setMonedaDestino(Moneda monedaDestino) {
         this.monedaDestino = monedaDestino;
     }
+    public Double getInputValue() {
+        return inputValue;
+    }
+    public void setInputValue(Double inputValue) {
+        this.inputValue = inputValue;
+    }
+    public Double getOutputValue() {
+        return outputValue;
+    }
+    public void setOutputValue(Double outputValue) {
+        this.outputValue = outputValue;
+    }
+
     // METODODS
 
+   
     /**
      * Esta función se llama cuando se carga el archivo FXML y se usa para
      * inicializar el controlador.
@@ -88,13 +131,14 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         // Agregando la colección al ComboBox.
+        cbCurrency1.getItems().addAll(createCollection());
         cbCurrency2.getItems().addAll(createCollection());
 
-        /*
-         * Configuración del convertidor para el ComboBox,
-         * para que me retorne el nombre de la moneda
-         */
+        /*Configuración del convertidor para el ComboBox,
+        para que me retorne el nombre de la moneda*/
+        cbCurrency1.setConverter(new monedaConverter());
         cbCurrency2.setConverter(new monedaConverter());
+
 
     }
 
@@ -114,6 +158,8 @@ public class MainController implements Initializable {
         monedas.add(new Moneda("Won Surcoreano", "KRW", 1305.65));
         return monedas;
     }
+
+    /*Metodos conversion de com */
 
 
 }
