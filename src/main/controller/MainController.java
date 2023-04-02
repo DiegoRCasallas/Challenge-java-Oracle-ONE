@@ -21,7 +21,7 @@ public class MainController implements Initializable {
     private Moneda monedaOrigen;
     private Moneda monedaDestino;
     private Double inputValue;
-    private Double outputValue;
+    private Double outputValue=0.0;
   
     /*Variables desde la vista principal*/
     @FXML
@@ -32,16 +32,6 @@ public class MainController implements Initializable {
     private ComboBox<Moneda> cbCurrency1, cbCurrency2, cbTemperature1, cbTemperature2;
     
     /*Escucha de eventos en Combobox */
-    @FXML
-    private void cbEvent(ActionEvent e) {
-        Object evento = e.getSource();
-        if (evento.equals(cbCurrency2)) {
-            setMonedaDestino(cbCurrency2.getSelectionModel().getSelectedItem());
-            System.out.println(this.monedaDestino.getTag());
-            txtOutputCurrency.setText(this.monedaDestino.getTag());
-        }
-
-    }
     @FXML
     private void cbEventCurrOrigen(ActionEvent e){
         Object evento= e.getSource();
@@ -56,8 +46,8 @@ public class MainController implements Initializable {
         Object evento= e.getSource();
         if(evento.equals(cbCurrency2)){
             //Seleccionamos Moneda y asidnamos a moneda origen
-            setMonedaOrigen(cbCurrency2.getSelectionModel().getSelectedItem());
-            System.out.println(this.monedaOrigen.getTag());
+            setMonedaDestino(cbCurrency2.getSelectionModel().getSelectedItem());
+            System.out.println(this.monedaDestino.getTag());
         }
 
     }
@@ -76,11 +66,14 @@ public class MainController implements Initializable {
         /*1.Caputurar el valor del input */
         setInputValue(Double.parseDouble(txtInputCurrency.getText()));
         /*1.5 Validar mondeda origen y monedaDestino */
-        
-        /*2. Convertir valor a dolares */
 
+        /*2. Convertir valor a dolares */
+        currencyConverter();
         /*3.Convertir valor a moneda destino */
+        txtOutputCurrency.setText(String.valueOf(monedaDestino.getValue()));
+
         System.out.println(this.inputValue);
+        System.out.println(this.outputValue);
     }
     @FXML
     private void btnEventTemperature(){
@@ -159,7 +152,28 @@ public class MainController implements Initializable {
         return monedas;
     }
 
-    /*Metodos conversion de com */
+    /*Metodos conversion de moneda*/
+    public Double conversionToDollarValue(Moneda moneda,Double value){
+        return value/moneda.getValue();
+    }
+    public Double conversionFromDollarValue(Moneda moneda,Double value){
+        return value*moneda.getValue();
+    }
 
+    /**
+     * If the currency is not USD, then convert it to USD, otherwise convert it from USD.
+     */
+    public void currencyConverter(){
+        if(monedaOrigen.getTag()!="USD"){
+            ArrayList<Moneda> monedasList = createCollection();
+            /*
+             * hacer converion dealternativa
+             */
+        }else{
+            Double result = conversionFromDollarValue(this.monedaDestino, inputValue);
+            setOutputValue(result);
+        }
+
+    }
 
 }
