@@ -13,14 +13,22 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
 import main.model.Moneda;
+import main.model.Temperatura;
 
 public class MainController implements Initializable {
 
-    /* vars */
+    // VARIABLES
+    /* vars currencyConverter */
     private Moneda monedaOrigen;
     private Moneda monedaDestino;
     private Double inputValue;
-    private Double outputValue = 0.0;
+    private Double outputValue;
+    /* vars Temperature converter */
+
+    private Temperatura temperatureOrigen;
+    private Temperatura temperatureDestino;
+    private Double inputTemperature;
+    private Double outputTemperature;
 
     /* Variables desde la vista principal */
     @FXML
@@ -28,9 +36,13 @@ public class MainController implements Initializable {
     @FXML
     private Button btnConvertCurrency, btnConvertTemperatureButton;
     @FXML
-    private ComboBox<Moneda> cbCurrency1, cbCurrency2, cbTemperature1, cbTemperature2;
+    private ComboBox<Moneda> cbCurrency1, cbCurrency2;
+    @FXML
+    private ComboBox<Temperatura> cbTemperature1, cbTemperature2;
 
     /* Escucha de eventos en Combobox */
+
+    // currency converter events
     @FXML
     private void cbEventCurrOrigen(ActionEvent e) {
         Object evento = e.getSource();
@@ -52,14 +64,25 @@ public class MainController implements Initializable {
 
     }
 
+    // Temperature converter events
     @FXML
-    private void cbEventTempOrigen() {
-
+    private void cbEventTempOrigen(ActionEvent e) {
+        Object evento = e.getSource();
+        if (evento.equals(cbTemperature1)) {
+            // Seleccionamos Moneda y asidnamos a moneda origen
+            this.temperatureOrigen = (cbTemperature1.getSelectionModel().getSelectedItem());
+            System.out.println(this.temperatureOrigen.getTag());
+        }
     }
 
     @FXML
-    private void cbEventTempDestino() {
-
+    private void cbEventTempDestino(ActionEvent e) {
+        Object evento = e.getSource();
+        if (evento.equals(cbTemperature2)) {
+            // Seleccionamos Moneda y asidnamos a moneda origen
+            this.temperatureDestino = (cbTemperature2.getSelectionModel().getSelectedItem());
+            System.out.println(this.temperatureDestino.getTag());
+        }
     }
 
     @FXML
@@ -79,6 +102,10 @@ public class MainController implements Initializable {
     @FXML
     private void btnEventTemperature() {
         System.out.println("convertir a Temperatura");
+        this.inputTemperature=Double.parseDouble(txtInputTemperature.getText());
+        temperatureConverter();
+        txtOutputTemperature.setText(String.valueOf(outputTemperature));
+        System.out.println(this.outputTemperature);
     }
 
     // GET Y SET
@@ -131,15 +158,25 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         // Agregando la colección al ComboBox.
+
+        /* 1. monedas */
         cbCurrency1.getItems().addAll(createCollection());
         cbCurrency2.getItems().addAll(createCollection());
+        /* 2.Temperaturas */
+        cbTemperature1.getItems().addAll(createCollectionTemperatures());
+        cbTemperature2.getItems().addAll(createCollectionTemperatures());
 
         /*
          * Configuración del convertidor para el ComboBox,
-         * para que me retorne el nombre de la moneda
+         * para que me retorne el nombre de la moneda/Temperatura
          */
+
+        /* 1.monedas */
         cbCurrency1.setConverter(new monedaConverter());
         cbCurrency2.setConverter(new monedaConverter());
+        /* 2.Temperaturas */
+        cbTemperature1.setConverter(new temperaturaConverter());
+        cbTemperature2.setConverter(new temperaturaConverter());
 
     }
 
@@ -176,15 +213,75 @@ public class MainController implements Initializable {
             for (int i = 0; i < monedasList.size(); i++) {
                 String tagCurrency = monedasList.get(i).getTag();
                 if (tagCurrency == monedaOrigen.getTag()) {
-                   Double toDollarValue = conversionToDollarValue(this.monedaOrigen, inputValue);
-                   result = conversionFromDollarValue(this.monedaDestino, toDollarValue);
-                   setOutputValue(result);
+                    Double toDollarValue = conversionToDollarValue(this.monedaOrigen, inputValue);
+                    result = conversionFromDollarValue(this.monedaDestino, toDollarValue);
+                    setOutputValue(result);
                 }
             }
 
         } else {
             Double result = conversionFromDollarValue(this.monedaDestino, inputValue);
             setOutputValue(result);
+        }
+
+    }
+
+    /* Metodos conversion de Temperatura */
+
+    private ArrayList<Temperatura> createCollectionTemperatures() {
+        ArrayList<Temperatura> temperaturasList = new ArrayList<>();
+        temperaturasList.add(new Temperatura("Grados Centigrados", "C"));
+        temperaturasList.add(new Temperatura("Grados Fahrenheit", "F"));
+        temperaturasList.add(new Temperatura("Grados Kelvin", "K"));
+        return temperaturasList;
+    }
+
+    public double celsiusToFahrenheit(double celsius) {
+        double fahrenheit = (celsius * 9 / 5) + 32;
+        return fahrenheit;
+    }
+
+    public double fahrenheitToCelsius(double fahrenheit) {
+        double celsius = (fahrenheit - 32) * 5 / 9;
+        return celsius;
+    }
+    public double celsiusToKelvin(double celsius) {
+        double kelvin = celsius+273.15;
+        return kelvin;
+    }
+    public double kelvinToCelsius(double kelvin) {
+        double celsius = kelvin-273.15;
+        return celsius;
+    }
+
+    
+
+    public void temperatureConverter() {
+        Double result;
+        if(temperatureOrigen.getTag()!="C"){
+            if(temperatureOrigen.getTag()==temperatureDestino.getTag()){
+                this.outputTemperature=this.inputTemperature;
+            }
+            if(temperatureOrigen.getTag()=="K"){
+                Double value =kelvinToCelsius(inputTemperature);
+                result = celsiusToFahrenheit(value);
+                this.outputTemperature=result;
+            }
+            if(temperatureOrigen.getTag()=="F"){
+                Double value= fahrenheitToCelsius(inputTemperature);
+                result= celsiusToKelvin(value);
+                this.outputTemperature=result;
+            }
+        }else{
+            if(temperatureDestino.getTag()=="F"){
+                result=celsiusToFahrenheit(this.inputTemperature);
+                this.outputTemperature=result;
+            }
+            if(temperatureDestino.getTag()=="K"){
+                result=celsiusToKelvin(this.inputTemperature);
+                this.outputTemperature=result;
+            }
+
         }
 
     }
