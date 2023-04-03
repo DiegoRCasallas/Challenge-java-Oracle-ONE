@@ -12,71 +12,72 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
-import main.model.ConversorCurrency;
 import main.model.Moneda;
 
 public class MainController implements Initializable {
 
-    /*vars */
+    /* vars */
     private Moneda monedaOrigen;
     private Moneda monedaDestino;
     private Double inputValue;
-    private Double outputValue=0.0;
-  
-    /*Variables desde la vista principal*/
+    private Double outputValue = 0.0;
+
+    /* Variables desde la vista principal */
     @FXML
-    private TextArea txtInputCurrency, txtOutputCurrency,txtInputTemperature, txtOutputTemperature;
+    private TextArea txtInputCurrency, txtOutputCurrency, txtInputTemperature, txtOutputTemperature;
     @FXML
-    private Button btnConvertCurrency,btnConvertTemperatureButton;
+    private Button btnConvertCurrency, btnConvertTemperatureButton;
     @FXML
     private ComboBox<Moneda> cbCurrency1, cbCurrency2, cbTemperature1, cbTemperature2;
-    
-    /*Escucha de eventos en Combobox */
+
+    /* Escucha de eventos en Combobox */
     @FXML
-    private void cbEventCurrOrigen(ActionEvent e){
-        Object evento= e.getSource();
-        if(evento.equals(cbCurrency1)){
-            //Seleccionamos Moneda y asidnamos a moneda origen
+    private void cbEventCurrOrigen(ActionEvent e) {
+        Object evento = e.getSource();
+        if (evento.equals(cbCurrency1)) {
+            // Seleccionamos Moneda y asidnamos a moneda origen
             setMonedaOrigen(cbCurrency1.getSelectionModel().getSelectedItem());
             System.out.println(this.monedaOrigen.getTag());
         }
     }
+
     @FXML
-    private void cbEventCurrDestino(ActionEvent e){
-        Object evento= e.getSource();
-        if(evento.equals(cbCurrency2)){
-            //Seleccionamos Moneda y asidnamos a moneda origen
+    private void cbEventCurrDestino(ActionEvent e) {
+        Object evento = e.getSource();
+        if (evento.equals(cbCurrency2)) {
+            // Seleccionamos Moneda y asidnamos a moneda origen
             setMonedaDestino(cbCurrency2.getSelectionModel().getSelectedItem());
             System.out.println(this.monedaDestino.getTag());
         }
 
     }
+
     @FXML
-    private void cbEventTempOrigen(){
+    private void cbEventTempOrigen() {
 
     }
+
     @FXML
-    private void cbEventTempDestino(){
+    private void cbEventTempDestino() {
 
     }
-    
+
     @FXML
-    private void btnEventCurrency(){
+    private void btnEventCurrency() {
         System.out.println("convertir moneda");
-        /*1.Caputurar el valor del input */
+        /* 1.Caputurar el valor del input */
         setInputValue(Double.parseDouble(txtInputCurrency.getText()));
-        /*1.5 Validar mondeda origen y monedaDestino */
-
-        /*2. Convertir valor a dolares */
+        /* 1.5 Validar mondeda origen y monedaDestino */
+        /* 2. Convertir valor a dolares */
         currencyConverter();
-        /*3.Convertir valor a moneda destino */
-        txtOutputCurrency.setText(String.valueOf(monedaDestino.getValue()));
+        /* 3.Convertir valor a moneda destino */
+        txtOutputCurrency.setText(String.valueOf(outputValue));
 
-        System.out.println(this.inputValue);
         System.out.println(this.outputValue);
     }
+
     @FXML
-    private void btnEventTemperature(){
+    private void btnEventTemperature() {
         System.out.println("convertir a Temperatura");
     }
 
@@ -84,31 +85,37 @@ public class MainController implements Initializable {
     public Moneda getMonedaOrigen() {
         return monedaOrigen;
     }
+
     public void setMonedaOrigen(Moneda monedaOrigen) {
         this.monedaOrigen = monedaOrigen;
     }
+
     public Moneda getMonedaDestino() {
         return monedaDestino;
     }
+
     public void setMonedaDestino(Moneda monedaDestino) {
         this.monedaDestino = monedaDestino;
     }
+
     public Double getInputValue() {
         return inputValue;
     }
+
     public void setInputValue(Double inputValue) {
         this.inputValue = inputValue;
     }
+
     public Double getOutputValue() {
         return outputValue;
     }
+
     public void setOutputValue(Double outputValue) {
         this.outputValue = outputValue;
     }
 
     // METODODS
 
-   
     /**
      * Esta función se llama cuando se carga el archivo FXML y se usa para
      * inicializar el controlador.
@@ -127,11 +134,12 @@ public class MainController implements Initializable {
         cbCurrency1.getItems().addAll(createCollection());
         cbCurrency2.getItems().addAll(createCollection());
 
-        /*Configuración del convertidor para el ComboBox,
-        para que me retorne el nombre de la moneda*/
+        /*
+         * Configuración del convertidor para el ComboBox,
+         * para que me retorne el nombre de la moneda
+         */
         cbCurrency1.setConverter(new monedaConverter());
         cbCurrency2.setConverter(new monedaConverter());
-
 
     }
 
@@ -152,24 +160,29 @@ public class MainController implements Initializable {
         return monedas;
     }
 
-    /*Metodos conversion de moneda*/
-    public Double conversionToDollarValue(Moneda moneda,Double value){
-        return value/moneda.getValue();
-    }
-    public Double conversionFromDollarValue(Moneda moneda,Double value){
-        return value*moneda.getValue();
+    /* Metodos conversion de moneda */
+    public Double conversionToDollarValue(Moneda moneda, Double value) {
+        return value / moneda.getValue();
     }
 
-    /**
-     * If the currency is not USD, then convert it to USD, otherwise convert it from USD.
-     */
-    public void currencyConverter(){
-        if(monedaOrigen.getTag()!="USD"){
+    public Double conversionFromDollarValue(Moneda moneda, Double value) {
+        return value * moneda.getValue();
+    }
+
+    public void currencyConverter() {
+        if (monedaOrigen.getTag() != "USD") {
             ArrayList<Moneda> monedasList = createCollection();
-            /*
-             * hacer converion dealternativa
-             */
-        }else{
+            Double result;
+            for (int i = 0; i < monedasList.size(); i++) {
+                String tagCurrency = monedasList.get(i).getTag();
+                if (tagCurrency == monedaOrigen.getTag()) {
+                   Double toDollarValue = conversionToDollarValue(this.monedaOrigen, inputValue);
+                   result = conversionFromDollarValue(this.monedaDestino, toDollarValue);
+                   setOutputValue(result);
+                }
+            }
+
+        } else {
             Double result = conversionFromDollarValue(this.monedaDestino, inputValue);
             setOutputValue(result);
         }
