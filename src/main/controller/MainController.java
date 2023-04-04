@@ -3,9 +3,6 @@ package main.controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-
-import javax.swing.Action;
-
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,7 +21,6 @@ public class MainController implements Initializable {
     private Double inputValue;
     private Double outputValue;
     /* vars Temperature converter */
-
     private Temperatura temperatureOrigen;
     private Temperatura temperatureDestino;
     private Double inputTemperature;
@@ -48,7 +44,7 @@ public class MainController implements Initializable {
         Object evento = e.getSource();
         if (evento.equals(cbCurrency1)) {
             // Seleccionamos Moneda y asidnamos a moneda origen
-            setMonedaOrigen(cbCurrency1.getSelectionModel().getSelectedItem());
+            this.monedaOrigen=(cbCurrency1.getSelectionModel().getSelectedItem());
             System.out.println(this.monedaOrigen.getTag());
         }
     }
@@ -58,7 +54,7 @@ public class MainController implements Initializable {
         Object evento = e.getSource();
         if (evento.equals(cbCurrency2)) {
             // Seleccionamos Moneda y asidnamos a moneda origen
-            setMonedaDestino(cbCurrency2.getSelectionModel().getSelectedItem());
+            this.monedaDestino=(cbCurrency2.getSelectionModel().getSelectedItem());
             System.out.println(this.monedaDestino.getTag());
         }
 
@@ -91,11 +87,12 @@ public class MainController implements Initializable {
         try {
             System.out.println("convertir moneda");
             /* 1.Caputurar el valor del input */
-            setInputValue(Double.parseDouble(txtInputCurrency.getText()));
-            /* 2. Convertir valor a dolares */
-            /* 3.Convertir valor a moneda destino */
+           this.inputValue=(Double.parseDouble(txtInputCurrency.getText()));
+            /*2. realizar conversion y cambiar outputValue */
             currencyConverter();
+            /*Mostrar outputIntefaz */
             txtOutputCurrency.setText(String.valueOf(outputValue));
+            /*veficar valor almacenado */
             System.out.println(this.outputValue);
         } catch (RuntimeException err) {
 
@@ -133,38 +130,6 @@ public class MainController implements Initializable {
     }
 
     // GET Y SET
-    public Moneda getMonedaOrigen() {
-        return monedaOrigen;
-    }
-
-    public void setMonedaOrigen(Moneda monedaOrigen) {
-        this.monedaOrigen = monedaOrigen;
-    }
-
-    public Moneda getMonedaDestino() {
-        return monedaDestino;
-    }
-
-    public void setMonedaDestino(Moneda monedaDestino) {
-        this.monedaDestino = monedaDestino;
-    }
-
-    public Double getInputValue() {
-        return inputValue;
-    }
-
-    public void setInputValue(Double inputValue) {
-        this.inputValue = inputValue;
-    }
-
-    public Double getOutputValue() {
-        return outputValue;
-    }
-
-    public void setOutputValue(Double outputValue) {
-        this.outputValue = outputValue;
-    }
-
     // METODODS
 
     /**
@@ -239,13 +204,13 @@ public class MainController implements Initializable {
                 if (tagCurrency == monedaOrigen.getTag()) {
                     Double toDollarValue = conversionToDollarValue(this.monedaOrigen, inputValue);
                     result = conversionFromDollarValue(this.monedaDestino, toDollarValue);
-                    setOutputValue(result);
+                    this.outputValue=result;
                 }
             }
 
         } else {
             Double result = conversionFromDollarValue(this.monedaDestino, inputValue);
-            setOutputValue(result);
+            this.outputValue=result;
         }
 
     }
