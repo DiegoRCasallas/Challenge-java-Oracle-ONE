@@ -180,6 +180,7 @@ public class MainController implements Initializable {
         monedas.add(new Moneda("Dolar USA", "USD", 1.0));
         monedas.add(new Moneda("Peso Mexicano", "MXN", 18.23));
         monedas.add(new Moneda("Peso Colombiano", "COP", 4600.0));
+        monedas.add(new Moneda("Libra Esterlina", "GBP", 0.8));
         monedas.add(new Moneda("Euro", "EUR", 0.92));
         monedas.add(new Moneda("Yen Japonés", "YEN", 132.6));
         monedas.add(new Moneda("Won Surcoreano", "KRW", 1305.65));
