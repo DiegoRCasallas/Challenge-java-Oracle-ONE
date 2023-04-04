@@ -98,7 +98,7 @@ public class MainController implements Initializable {
             txtOutputCurrency.setText(String.valueOf(outputValue));
             System.out.println(this.outputValue);
         } catch (RuntimeException err) {
-        
+
             if (err.getClass() == NumberFormatException.class) {
                 txtOutputCurrency.setText("ERROR: debe ingresar numeros unicamente");
                 txtInputCurrency.setText("");
@@ -106,29 +106,29 @@ public class MainController implements Initializable {
             if (err.getClass() == NullPointerException.class) {
                 txtOutputCurrency.setText("ERROR: debe seleccionar ambos campos");
             }
-            
+
         }
 
     }
 
     @FXML
     private void btnEventTemperature() {
-        try {
+        try{
             System.out.println("convertir a Temperatura");
-            this.inputTemperature = Double.parseDouble(txtInputTemperature.getText());
-            temperatureConverter();
-            txtOutputTemperature.setText(String.valueOf(outputTemperature));
+            this.inputTemperature = Double.parseDouble(this.txtInputTemperature.getText());
+            // temperatureConverter();
+            temperaturaConverterMejorado();
+            txtOutputTemperature.setText(String.valueOf(this.outputTemperature));
             System.out.println(this.outputTemperature);
-
-        } catch (RuntimeException err) {
+         } catch (RuntimeException err) {
             if (err.getClass() == NumberFormatException.class) {
-                txtOutputCurrency.setText("ERROR: debe ingresar numeros unicamente");
-                txtInputCurrency.setText("");
+                txtOutputTemperature.setText("ERROR: debe ingresar numeros unicamente");
+                txtInputTemperature.setText("");
             }
             if (err.getClass() == NullPointerException.class) {
-                txtOutputCurrency.setText("ERROR: debe seleccionar ambos campos");
+                txtOutputTemperature.setText("ERROR: debe seleccionar ambos campos");
             }
-            
+
         }
     }
 
@@ -260,54 +260,34 @@ public class MainController implements Initializable {
         return temperaturasList;
     }
 
-    public double celsiusToFahrenheit(double celsius) {
-        double fahrenheit = (celsius * 9 / 5) + 32;
-        return fahrenheit;
-    }
-
-    public double fahrenheitToCelsius(double fahrenheit) {
-        double celsius = (fahrenheit - 32) * 5 / 9;
-        return celsius;
-    }
-
-    public double celsiusToKelvin(double celsius) {
-        double kelvin = celsius + 273.15;
-        return kelvin;
-    }
-
-    public double kelvinToCelsius(double kelvin) {
-        double celsius = kelvin - 273.15;
-        return celsius;
-    }
-
-    public void temperatureConverter() {
+    /* Mejora de metodos conversion Temperaturas */
+    public Double conversionToCelsiusValue(Temperatura temperatura, Double value) {
         Double result;
-        if (temperatureOrigen.getTag() != "C") {
-            if (temperatureOrigen.getTag() == temperatureDestino.getTag()) {
-                this.outputTemperature = this.inputTemperature;
-            }
-            if (temperatureOrigen.getTag() == "K") {
-                Double value = kelvinToCelsius(inputTemperature);
-                result = celsiusToFahrenheit(value);
-                this.outputTemperature = result;
-            }
-            if (temperatureOrigen.getTag() == "F") {
-                Double value = fahrenheitToCelsius(inputTemperature);
-                result = celsiusToKelvin(value);
-                this.outputTemperature = result;
-            }
+        if (temperatura.getTag() == "K") {
+            return result = value - 273.15;
+        } else if (temperatura.getTag() == "F") {
+            return result = (value - 32) * 5 / 9;
         } else {
-            if (temperatureDestino.getTag() == "F") {
-                result = celsiusToFahrenheit(this.inputTemperature);
-                this.outputTemperature = result;
-            }
-            if (temperatureDestino.getTag() == "K") {
-                result = celsiusToKelvin(this.inputTemperature);
-                this.outputTemperature = result;
-            }
-
+            return value;
         }
 
+    }
+
+    public Double conversionFromCelsiusValue(Temperatura temperatura, Double value) {
+        Double result;
+        if (temperatura.getTag() == "K") {
+            return result = value + 273.15;
+        } else if (temperatura.getTag() == "F") {
+            return result = (value * 9 / 5) + 32;
+        } else {
+            return value;
+        }
+    }
+
+    public void temperaturaConverterMejorado() {
+        Double celsiusValue = conversionToCelsiusValue(temperatureOrigen, inputTemperature);
+        Double result = conversionFromCelsiusValue(temperatureDestino, celsiusValue);
+        this.outputTemperature=result;
     }
 
 }
